@@ -1,11 +1,14 @@
 package com.fhao.mini_generator.factory;
 
 import com.fhao.mini_generator.bean.ConfigInfo;
+import com.fhao.mini_generator.bean.GlobalConfiguration;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -26,19 +29,26 @@ public class PropertiesFactory {
     private static Map<String, String> PROPER_MAP = new ConcurrentHashMap<>();
 
     public static void loadProperties() throws IOException, InvocationTargetException, IllegalAccessException {
-        InputStream inputStream = null;
+        InputStream inputStream;
         inputStream = PropertiesFactory.class.getClassLoader().getResourceAsStream("application.properties");
         props.load(inputStream);
-        Iterator<Object> iterator = props.keySet().iterator();
-        while (iterator.hasNext()) {
-            String key = (String) iterator.next();
+        for (Object o : props.keySet()) {
+            String key = (String) o;
             PROPER_MAP.put(key, props.getProperty(key));
         }
         ConfigInfo configInfo = new ConfigInfo();
         BeanUtils.populate(configInfo, PROPER_MAP);
         configInfo.setIncludeMap(parseInclude(configInfo.getInclude()));
         configInfo.setCustomHandleIncludeMap(parseInclude(configInfo.getCustomHandleInclude()));
+
+        String projectPath = configInfo.getRootPath() + File.separator + configInfo.getProjectName();
+        configInfo.setProjectPath(projectPath);
+        GlobalConfiguration.setCONFIGINFO(
+                configInfo
+        );
+        logger.info("属性加载完成, 属性: " + configInfo);
     }
+
     private static Map<String, String> parseInclude(String include) {
         Map<String, String> result = new HashMap<>();
         if (StringUtils.isBlank(include)) {
@@ -50,7 +60,9 @@ public class PropertiesFactory {
         }
         return result;
     }
+
     private static Logger logger = LoggerFactory.getLogger(PropertiesFactory.class);
+
     public static void main(String[] args) throws IOException, InvocationTargetException, IllegalAccessException {
         loadProperties();
         System.out.println(PROPER_MAP.get("ip"));
