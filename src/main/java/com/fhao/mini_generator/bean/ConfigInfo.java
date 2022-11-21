@@ -39,7 +39,7 @@ public class ConfigInfo {
     /**
      * 用户名
      */
-    private String loginName;
+    private String userName;
 
     /**
      * 密码

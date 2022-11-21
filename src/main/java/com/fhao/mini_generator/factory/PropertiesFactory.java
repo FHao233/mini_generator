@@ -4,7 +4,8 @@ import com.fhao.mini_generator.bean.ConfigInfo;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.lang3.StringUtils;
-
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -13,6 +14,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
+
 
 /**
  * author: FHao
@@ -48,7 +50,7 @@ public class PropertiesFactory {
         }
         return result;
     }
-
+    private static Logger logger = LoggerFactory.getLogger(PropertiesFactory.class);
     public static void main(String[] args) throws IOException, InvocationTargetException, IllegalAccessException {
         loadProperties();
         System.out.println(PROPER_MAP.get("ip"));
