@@ -40,12 +40,10 @@ public class PropertiesFactory {
         BeanUtils.populate(configInfo, PROPER_MAP);
         configInfo.setIncludeMap(parseInclude(configInfo.getInclude()));
         configInfo.setCustomHandleIncludeMap(parseInclude(configInfo.getCustomHandleInclude()));
-
+        configInfo.setIgnoreDbPrefix(PROPER_MAP.get("ignore.db.prefix").equals("1"));
         String projectPath = configInfo.getRootPath() + File.separator + configInfo.getProjectName();
         configInfo.setProjectPath(projectPath);
-        GlobalConfiguration.setCONFIGINFO(
-                configInfo
-        );
+        GlobalConfiguration.setCONFIGINFO(configInfo);
         logger.info("属性加载完成, 属性: " + configInfo);
     }
 
@@ -65,6 +63,6 @@ public class PropertiesFactory {
 
     public static void main(String[] args) throws IOException, InvocationTargetException, IllegalAccessException {
         loadProperties();
-        System.out.println(PROPER_MAP.get("ip"));
+        System.out.println(PROPER_MAP.get("ignore.db.prefix"));
     }
 }

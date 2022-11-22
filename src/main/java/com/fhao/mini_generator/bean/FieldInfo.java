@@ -21,10 +21,6 @@ public class FieldInfo {
      */
     private String javaType;
     /**
-     * 所属类
-     */
-    private String fieldClass;
-    /**
      * 字段注释
      */
     private String fieldComment;
@@ -32,4 +28,13 @@ public class FieldInfo {
      * 是否自增
      */
     private boolean isAutoIncrement;
+    /**
+     * 是否为空
+     */
+    private String nullAble;
+    /**
+     * 是否为主键
+     */
+    private boolean isPrimaryKey;
+
 }

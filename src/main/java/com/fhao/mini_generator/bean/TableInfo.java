@@ -26,6 +26,12 @@ public class TableInfo {
      * 表注释
      */
     private String classComment;
-
+    /**
+     * 主键信息
+     */
+    private FieldInfo primaryKey;
+    /**
+     * 字段信息
+     */
     private List<FieldInfo> fieldList;
 }

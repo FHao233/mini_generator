@@ -1,6 +1,7 @@
 package com.fhao.mini_generator.bean;
 
 import lombok.Data;
+import lombok.Getter;
 
 import java.util.Map;
 
@@ -90,6 +91,11 @@ public class ConfigInfo {
      * 项目根目录
      */
     private String projectPath;
+
+    /**
+     * 忽略数据库前缀
+     */
+    private boolean ignoreDbPrefix;
 
 
 }
