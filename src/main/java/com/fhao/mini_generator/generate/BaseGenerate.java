@@ -6,7 +6,9 @@ package com.fhao.mini_generator.generate;
  * description:
  */
 public interface BaseGenerate {
-
+    /**
+     * 执行器
+     */
     void execute();
-    void genFix();
+
 }
