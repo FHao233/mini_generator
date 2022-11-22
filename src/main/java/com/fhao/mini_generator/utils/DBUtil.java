@@ -3,6 +3,7 @@ package com.fhao.mini_generator.utils;
 import com.fhao.mini_generator.bean.FieldInfo;
 import com.fhao.mini_generator.bean.GlobalConfiguration;
 import com.fhao.mini_generator.bean.TableInfo;
+import com.fhao.mini_generator.bean.TableNameAndComment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +55,7 @@ public class DBUtil {
 
     /***
      * TableInfo SQL
-     * @param tableName tableName
+     * @param tableName
      */
     private static String getTableInfoSql(String tableName) {
         return MessageFormat.format("select column_name,data_type,column_comment,numeric_precision," +
@@ -63,38 +64,53 @@ public class DBUtil {
     }
 
     /***
-     * 根据指定库获取单表相关参数
-     * @param
+     * 获取指定数据库的所有数据表名称和注释信息
+     * @return tableNames
      */
-    public static List<TableInfo> getTablesInfo() throws SQLException {
+    public static List<TableNameAndComment> getTableNames() throws SQLException {
         Statement statement = DBConnectUtil.getConnection().createStatement();
         ResultSet tableResult = statement.executeQuery(SQL_SHOW_TABLE_STATUS);
-        List<TableInfo> tableInfoList = new ArrayList<>();
+        List<TableNameAndComment> tableNames = new ArrayList<>();
         while (tableResult.next()) {
-
-            String tableName = tableResult.getString(1);
-            TableInfo tableInfo = new TableInfo();
-            tableInfo.setTableName(tableName);
-            String tableInfoSql = getTableInfoSql(tableName);
-            if (GlobalConfiguration.getConfigInfo().isIgnoreDbPrefix()) {
-                tableName = tableName.substring(tableName.indexOf("_") + 1);
-            }
-            String className = NameConvertUtil.convertToJavaName(tableName);
-            tableInfo.setClassName(className);
-            tableInfo.setBeanName(NameConvertUtil.lowerCaseAtFirst(className));
-            tableInfo.setClassComment(tableResult.getString("Comment"));
-            List<FieldInfo> fieldList = getFieldsInfo(tableInfoSql);
-            tableInfo.setFieldList(fieldList);
-            for (FieldInfo fieldInfo : fieldList) {
-                if (fieldInfo.isPrimaryKey()) {
-                    tableInfo.setPrimaryKey(fieldInfo);
-                    break;
-                }
-            }
-            tableInfoList.add(tableInfo);
+            TableNameAndComment nameAndComment = new TableNameAndComment();
+            nameAndComment.setTableName(tableResult.getString(1));
+            nameAndComment.setComment(tableResult.getString("Comment"));
+            tableNames.add(nameAndComment);
         }
-        logger.info("数据库信息:{}",JsonUtils.convertObj2Json(tableInfoList));
-        return tableInfoList;
+        return tableNames;
+    }
+
+    /***
+     * 根据指定库获取单表相关信息
+     * @param tableNameAndComment
+     *
+     */
+    public static TableInfo getTablesInfo(TableNameAndComment tableNameAndComment) throws SQLException {
+
+
+        String tableName = tableNameAndComment.getTableName();
+        TableInfo tableInfo = new TableInfo();
+        tableInfo.setTableName(tableName);
+
+        if (GlobalConfiguration.getConfigInfo().isIgnoreDbPrefix()) {
+            tableName = tableName.substring(tableName.indexOf("_") + 1);
+        }
+        String className = NameConvertUtil.convertToJavaName(tableName);
+        tableInfo.setClassName(className);
+        tableInfo.setBeanName(NameConvertUtil.lowerCaseAtFirst(className));
+        tableInfo.setClassComment(tableNameAndComment.getComment());
+
+        String tableInfoSql = getTableInfoSql(tableNameAndComment.getTableName());
+        List<FieldInfo> fieldList = getFieldsInfo(tableInfoSql);
+        tableInfo.setFieldList(fieldList);
+        for (FieldInfo fieldInfo : fieldList) {
+            if (fieldInfo.isPrimaryKey()) {
+                tableInfo.setPrimaryKey(fieldInfo);
+                break;
+            }
+        }
+        logger.info("数据库信息:{}", JsonUtils.convertObj2Json(tableInfo));
+        return tableInfo;
     }
 
     private static List<FieldInfo> getFieldsInfo(String tableInfoSql) throws SQLException {
@@ -120,10 +136,5 @@ public class DBUtil {
         return fieldList;
     }
 
-    public static void main(String[] args) throws SQLException {
-//        for (TableInfo tableInfo : getTablesInfo()) {
-//            System.out.println(tableInfo);
-//        }
-        getTablesInfo();
-    }
+
 }
