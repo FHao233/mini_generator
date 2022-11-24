@@ -12,6 +12,6 @@ mybatis.type-aliases-package = ${configInfo.packageName}.entity
 
 # mysql配置
 spring.datasource.driverClassName=${configInfo.driver}
-spring.datasource.url=jdbc:mysql://${configInfo.ip}:${configInfo.port}/${configInfo.dataBase}?characterEncoding=${configInfo.encoding}
+spring.datasource.url=${configInfo.url}
 spring.datasource.username=${configInfo.userName}
 spring.datasource.password=${configInfo.passWord}

@@ -13,15 +13,9 @@ import java.util.Map;
 @Data
 public class ConfigInfo {
     /**
-     * 数据库IP地址
+     * 数据库连接地址
      */
-    private String ip;
-
-    /**
-     * 端口号
-     */
-    private String port;
-
+    private String url;
     /**
      * 驱动
      */
@@ -31,12 +25,6 @@ public class ConfigInfo {
      * 数据库名
      */
     private String dataBase;
-
-    /**
-     * 编码
-     */
-    private String encoding;
-
     /**
      * 用户名
      */

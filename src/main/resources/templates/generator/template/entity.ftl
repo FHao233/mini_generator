@@ -19,6 +19,7 @@ public class ${tableInfo.className} implements Serializable {
     /**
      * ${fieldItem.fieldName}  ${fieldItem.fieldComment}
      */
+
     private ${fieldItem.javaType} ${fieldItem.paramName};
 </#list>
 </#if>

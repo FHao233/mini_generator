@@ -19,7 +19,6 @@ import java.util.List;
 public class TableInfoFactory {
 
     private volatile static List<TableInfo> TABLE_INFO_LIST = new ArrayList<>();
-
     public static List<TableInfo> getClassInfoList() {
         if (CollectionUtil.isEmpty(TABLE_INFO_LIST)) {
             synchronized (TableInfoFactory.class) {
@@ -27,7 +26,6 @@ public class TableInfoFactory {
                     try {
                         // 获取配置项
                         ConfigInfo config = GlobalConfiguration.getConfigInfo();
-
                         List<TableNameAndComment> tableNames = DBUtil.getTableNames();
                         for (TableNameAndComment nameAndComment : tableNames) {
                             // 仅加载 *; 配置项 或者 include包含项才进行处理

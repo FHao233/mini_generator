@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter;
  * @date ${.now?string('yyyy/MM/dd')}
  */
 @Data
-public class ApiResponse<T> implements Serializable {
+public class Result<T> implements Serializable {
 
     /**
      * 状态码
@@ -26,7 +26,7 @@ public class ApiResponse<T> implements Serializable {
     private T data;
 
     /**
-     * 错误信息
+     * 信息
      */
     private String msg;
 
@@ -35,16 +35,10 @@ public class ApiResponse<T> implements Serializable {
      */
     private String time;
 
-    /***
-     * 地址
-     */
-    private String path;
-
-    public ApiResponse(Integer code, T data, String msg, String path) {
+    public Result(Integer code, T data, String msg) {
     this.code = code;
     this.data = data;
     this.msg = msg;
-    this.path = path;
     this.time = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
     }
 

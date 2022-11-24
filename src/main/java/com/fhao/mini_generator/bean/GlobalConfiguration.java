@@ -12,19 +12,12 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class GlobalConfiguration {
     private volatile static ConfigInfo CONFIGINFO = null;
-    public static ConfigInfo getConfigInfo(){
-        if(CONFIGINFO == null){
-            synchronized (GlobalConfiguration.class){
-                if(CONFIGINFO == null){
-                    try {
-                        PropertiesFactory.loadProperties();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    } catch (InvocationTargetException e) {
-                        throw new RuntimeException(e);
-                    } catch (IllegalAccessException e) {
-                        throw new RuntimeException(e);
-                    }
+
+    public static ConfigInfo getConfigInfo() {
+        if (CONFIGINFO == null) {
+            synchronized (GlobalConfiguration.class) {
+                if (CONFIGINFO == null) {
+                    PropertiesFactory.loadProperties();
                 }
             }
         }

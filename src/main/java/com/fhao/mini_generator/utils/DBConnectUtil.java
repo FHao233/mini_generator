@@ -26,7 +26,7 @@ public class DBConnectUtil {
                         long start = System.currentTimeMillis();
                         Class.forName(GlobalConfiguration.getConfigInfo().getDriver());
                         ConfigInfo config = GlobalConfiguration.getConfigInfo();
-                        String url = String.format("jdbc:mysql://%s:%s/%s?characterEncoding=%s", config.getIp(), config.getPort(), config.getDataBase(), config.getEncoding());
+                        String url = config.getUrl();
                         conn = DriverManager.getConnection(url, config.getUserName(), config.getPassWord());
                         logger.info("已连接数据库，耗时：" + (System.currentTimeMillis() - start) + "ms");
                     }

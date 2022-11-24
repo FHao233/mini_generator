@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import ${packageName}.entity.*;
-import ${packageName}.common.ApiResponse;
+import ${packageName}.common.Result;
 import ${packageName}.common.PageList;
 import ${packageName}.common.ResultCode;
 import ${packageName}.service.*;
@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -43,9 +41,9 @@ public class ${tableInfo.className}Controller {
      */
     @RequestMapping(value = "/insert")
     @ResponseBody
-    public ApiResponse insert (@RequestBody ${tableInfo.className} ${tableInfo.beanName}, HttpServletRequest request) {
+    public Result insert (@RequestBody ${tableInfo.className} ${tableInfo.beanName}) {
         int affectRows = ${tableInfo.className?uncap_first}service.insert(${tableInfo.beanName});
-        return new ApiResponse<>(ResultCode.success.getCode(), affectRows, ResultCode.success.getDescr(), request.getRequestURI());
+        return new Result(ResultCode.success.getCode(), affectRows, ResultCode.success.getDescr());
     }
 
     /**
@@ -64,9 +62,9 @@ public class ${tableInfo.className}Controller {
      */
     @RequestMapping(value = "/batchInsert")
     @ResponseBody
-    public ApiResponse batchInsert (@RequestBody List<${tableInfo.className}> list, HttpServletRequest request) {
+    public Result batchInsert (@RequestBody List<${tableInfo.className}> list) {
         int affectRows = ${tableInfo.className?uncap_first}service.batchInsert(list);
-        return new ApiResponse<>(ResultCode.success.getCode(), affectRows, ResultCode.success.getDescr(), request.getRequestURI());
+        return new Result(ResultCode.success.getCode(), affectRows, ResultCode.success.getDescr());
     }
 
     /**
@@ -79,9 +77,9 @@ public class ${tableInfo.className}Controller {
      */
     @RequestMapping(value = "/update")
     @ResponseBody
-    public ApiResponse update (@RequestBody ${tableInfo.className} ${tableInfo.beanName}, HttpServletRequest request) {
+    public Result update (@RequestBody ${tableInfo.className} ${tableInfo.beanName}) {
         int affectRows = ${tableInfo.className?uncap_first}service.update(${tableInfo.beanName});
-        return new ApiResponse<>(ResultCode.success.getCode(), affectRows, ResultCode.success.getDescr(), request.getRequestURI());
+        return new Result(ResultCode.success.getCode(), affectRows, ResultCode.success.getDescr());
     }
 
     /**
@@ -93,9 +91,9 @@ public class ${tableInfo.className}Controller {
      */
     @RequestMapping(value = "/delete")
     @ResponseBody
-    public ApiResponse delete (@RequestBody Object key, HttpServletRequest request) {
+    public Result delete (@RequestBody Object key) {
         int affectRows = ${tableInfo.className?uncap_first}service.delete(key);
-        return new ApiResponse<>(ResultCode.success.getCode(), affectRows, ResultCode.success.getDescr(), request.getRequestURI());
+        return new Result(ResultCode.success.getCode(), affectRows, ResultCode.success.getDescr());
     }
 
     /**
@@ -108,9 +106,9 @@ public class ${tableInfo.className}Controller {
      */
     @RequestMapping(value = "/batchDelete")
     @ResponseBody
-    public ApiResponse batchDelete (@RequestBody List<Object> keys, HttpServletRequest request) {
+    public Result batchDelete (@RequestBody List<Object> keys) {
         int affectRows = ${tableInfo.className?uncap_first}service.batchDelete(keys);
-        return new ApiResponse<>(ResultCode.success.getCode(), affectRows, ResultCode.success.getDescr(), request.getRequestURI());
+        return new Result(ResultCode.success.getCode(), affectRows, ResultCode.success.getDescr());
     }
 
     /**
@@ -122,9 +120,9 @@ public class ${tableInfo.className}Controller {
      */
     @RequestMapping(value = "/selectByKey")
     @ResponseBody
-    public ApiResponse selectByKey (@RequestBody Object key, HttpServletRequest request) {
+    public Result selectByKey (@RequestBody Object key) {
         ${tableInfo.className} ${tableInfo.beanName} = ${tableInfo.className?uncap_first}service.selectByKey(key);
-        return new ApiResponse<>(ResultCode.success.getCode(), ${tableInfo.beanName}, ResultCode.success.getDescr(), request.getRequestURI());
+        return new Result(ResultCode.success.getCode(), ${tableInfo.beanName}, ResultCode.success.getDescr());
     }
 
     /***
@@ -137,9 +135,9 @@ public class ${tableInfo.className}Controller {
     */
     @RequestMapping(value = "/selectList")
     @ResponseBody
-    public ApiResponse selectList (@RequestBody ${tableInfo.className} ${tableInfo.beanName}, HttpServletRequest request) {
+    public Result selectList (@RequestBody ${tableInfo.className} ${tableInfo.beanName}) {
         List<${tableInfo.className}> result = ${tableInfo.className?uncap_first}service.selectList(${tableInfo.beanName});
-        return new ApiResponse<>(ResultCode.success.getCode(), result, ResultCode.success.getDescr(), request.getRequestURI());
+        return new Result(ResultCode.success.getCode(), result, ResultCode.success.getDescr());
     }
 
     /***
@@ -152,7 +150,7 @@ public class ${tableInfo.className}Controller {
      */
     @RequestMapping(value = "/selectPage")
     @ResponseBody
-    public ApiResponse selectPage (@RequestBody JSONObject object, HttpServletRequest request) {
+    public Result selectPage (@RequestBody JSONObject object) {
         Integer page     = (Integer) object.getOrDefault("page"    , 1);
         Integer pageSize = (Integer) object.getOrDefault("pageSize", 15);
 
@@ -162,7 +160,7 @@ public class ${tableInfo.className}Controller {
 
         ${tableInfo.className} ${tableInfo.beanName} = object.toJavaObject(${tableInfo.className}.class);
         PageList<${tableInfo.className}> pageList = ${tableInfo.className?uncap_first}service.selectPage(${tableInfo.beanName}, page, pageSize);
-        return new ApiResponse<>(ResultCode.success.getCode(), pageList, ResultCode.success.getDescr(), request.getRequestURI());
+        return new Result(ResultCode.success.getCode(), pageList, ResultCode.success.getDescr());
     }
 
     /***

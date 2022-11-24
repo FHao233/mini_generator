@@ -3,7 +3,6 @@ package com.fhao.mini_generator.factory;
 import com.fhao.mini_generator.bean.ConfigInfo;
 import com.fhao.mini_generator.bean.GlobalConfiguration;
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
@@ -13,7 +12,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,24 +25,29 @@ import java.util.concurrent.ConcurrentHashMap;
 public class PropertiesFactory {
     private static Properties props = new Properties();
     private static Map<String, String> PROPER_MAP = new ConcurrentHashMap<>();
-
-    public static void loadProperties() throws IOException, InvocationTargetException, IllegalAccessException {
+    private static Logger logger = LoggerFactory.getLogger(PropertiesFactory.class);
+    public static void loadProperties()  {
         InputStream inputStream;
-        inputStream = PropertiesFactory.class.getClassLoader().getResourceAsStream("application.properties");
-        props.load(inputStream);
-        for (Object o : props.keySet()) {
-            String key = (String) o;
-            PROPER_MAP.put(key, props.getProperty(key));
+        inputStream = PropertiesFactory.class.getClassLoader().getResourceAsStream("generator.properties");
+        try {
+            props.load(inputStream);
+            for (Object o : props.keySet()) {
+                String key = (String) o;
+                PROPER_MAP.put(key, props.getProperty(key));
+            }
+            ConfigInfo configInfo = new ConfigInfo();
+            BeanUtils.populate(configInfo, PROPER_MAP);
+            configInfo.setIncludeMap(parseInclude(configInfo.getInclude()));
+            configInfo.setCustomHandleIncludeMap(parseInclude(configInfo.getCustomHandleInclude()));
+            configInfo.setIgnoreDbPrefix(PROPER_MAP.get("ignorePrefix").equalsIgnoreCase("true"));
+            String projectPath = configInfo.getRootPath() + File.separator + configInfo.getProjectName();
+            configInfo.setProjectPath(projectPath);
+            GlobalConfiguration.setCONFIGINFO(configInfo);
+            logger.info("属性加载完成, 属性: " + configInfo);
+        } catch (IOException | IllegalAccessException | InvocationTargetException e) {
+            logger.info("读取配置文件失败:" , e);
         }
-        ConfigInfo configInfo = new ConfigInfo();
-        BeanUtils.populate(configInfo, PROPER_MAP);
-        configInfo.setIncludeMap(parseInclude(configInfo.getInclude()));
-        configInfo.setCustomHandleIncludeMap(parseInclude(configInfo.getCustomHandleInclude()));
-        configInfo.setIgnoreDbPrefix(PROPER_MAP.get("ignore.db.prefix").equals("1"));
-        String projectPath = configInfo.getRootPath() + File.separator + configInfo.getProjectName();
-        configInfo.setProjectPath(projectPath);
-        GlobalConfiguration.setCONFIGINFO(configInfo);
-        logger.info("属性加载完成, 属性: " + configInfo);
+
     }
 
     private static Map<String, String> parseInclude(String include) {
@@ -59,10 +62,4 @@ public class PropertiesFactory {
         return result;
     }
 
-    private static Logger logger = LoggerFactory.getLogger(PropertiesFactory.class);
-
-    public static void main(String[] args) throws IOException, InvocationTargetException, IllegalAccessException {
-        loadProperties();
-        System.out.println(PROPER_MAP.get("ignore.db.prefix"));
-    }
 }

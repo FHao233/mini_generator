@@ -116,15 +116,14 @@ public class DefaultGenerator extends AbstractGenerate {
         String filePath = rootPath + RESOURCE_STRUCT;
         build("pom", "generator/common/pom.ftl", rootPath + SPACER + "pom.xml");
         build("logback-spring", "generator/common/logback-spring.ftl", filePath + "logback-spring.xml");
-        build("application", "generator/common/applicationConfig.ftl", filePath + "application.properties");
+        build("application", "generator/common/applicationConfig.ftl", filePath + "generator.properties");
     }
 
     @Override
     public void generateDefault() {
-        generateClass("ApiResponse", "generator/common/ApiResponse.ftl", "common", ".java");
+        generateClass("Result", "generator/common/Result.ftl", "common", ".java");
         generateClass("PageList", "generator/common/PageList.ftl", "common", ".java");
         String projectName = NameConvertUtil.convertToJavaName(config.getProjectName());
-
         generateClass(projectName + "Application", "generator/common/Application.ftl", "", ".java");
         generateClass("ResultCode", "generator/common/ResultCode.ftl", "common", ".java");
 
